@@ -46,7 +46,7 @@ function Activity(props) {
                     key={day}
                     className={
                       !activity.activityDays.includes(String(day))
-                        ? ''
+                        ? 'box_btn'
                         : 'active'
                     }
                     value={day}
@@ -58,7 +58,9 @@ function Activity(props) {
               })}
             </div>
             <div className="cross">
-              <p>x</p>
+              <p id={i} onClick={(e) => props.handleRemove(e)}>
+                x
+              </p>
             </div>
           </section>
         );

@@ -10,6 +10,17 @@ class Main extends React.Component {
     };
   }
 
+  componentDidMount() {
+    if (localStorage.activities) {
+      this.setState({ activities: JSON.parse(localStorage.activities) || [] });
+    }
+    window.addEventListener('beforeunload', this.handleUpdateLocalStorage);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.handleUpdateLocalStorage);
+  }
+
   handleChange = ({ target }) => {
     let { value } = target;
     this.setState({ inputText: value });
@@ -37,6 +48,7 @@ class Main extends React.Component {
 
   handleRemove = ({ target }) => {
     let { id } = target;
+    console.log(id);
     this.setState((prevState) => ({
       activities: prevState.activities.filter(
         (a) => a !== prevState.activities[id]
@@ -46,12 +58,14 @@ class Main extends React.Component {
 
   handleClick = (event) => {
     let { id, value } = event.target;
+
     let activities = this.state.activities;
     if (!activities[id].activityDays.includes(value)) {
       activities[id].activityDays.push(value);
       let activity = activities[id].activityDays;
       this.setState((prevState) => {
         let updatedActivity = prevState.activities.map((a, i) => {
+          console.log(a, i);
           if (i === Number(id)) {
             return {
               ...a,
@@ -83,6 +97,10 @@ class Main extends React.Component {
         };
       });
     }
+  };
+
+  handleUpdateLocalStorage = () => {
+    localStorage.setItem('activities', JSON.stringify(this.state.activities));
   };
 
   render() {
